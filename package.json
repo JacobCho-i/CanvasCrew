@@ -1,0 +1,19 @@
+{
+  "name": "canvascrew",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.4.4",
+    "@types/react": "18.2.16",
+    "typescript": "5.1.6"
+  }
+}
