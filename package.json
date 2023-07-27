@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "next-auth": "^4.22.3",
     "next-themes": "^0.2.1",
     "react": "^18.2.0"
   },
