@@ -1,30 +1,29 @@
 'use client'
 
 import { FC, useState } from 'react'
-import { useDraw } from '../../hooks/useDraw';
-import { start } from 'repl';
-import { ChromePicker } from 'react-color'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-interface PageProps {}
 
-const page: FC<PageProps> = ({}) => {
+interface PageProps {
+  initialRoomId: number;
+}
 
-  const generateRandomId = () => {
-    return Math.floor(Math.random() * 9000) + 1000;
-  };
+const Page: FC<PageProps> = ({ initialRoomId }) => {
+  const [roomId, setRoomId] = useState(initialRoomId);
 
-  const randomId = generateRandomId();
-  
   return (
     <div className='w-screen h-screen bg-white flex justify-center items-center'>
       <div className='flex flex-col gap-10 pr-10'>
-        <a href={`/rooms/${randomId}`}>
+        <a href={`/rooms/${roomId}`}>
           <button>to random room</button>
         </a>
       </div>
     </div>
   );
-    
 }
 
-export default page
+export async function getServerSideProps() {
+  const roomId = Math.floor(Math.random() * 9000) + 1000;
+
+  return { props: { initialRoomId: roomId } };
+}
+
+export default Page;

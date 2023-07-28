@@ -2,8 +2,9 @@
 
 import { FC, useState } from 'react'
 import { useDraw } from '../../../../hooks/useDraw';
-import { start } from 'repl';
-import { ChromePicker } from 'react-color'
+import dynamic from 'next/dynamic';
+
+const ChromePicker = dynamic(() => import('react-color').then(mod => mod.ChromePicker), { ssr: false });
 
 interface PageProps {}
 
