@@ -4,4 +4,6 @@ type Draw = {
     prevPoint: Point | null
   }
   
-  type Point = { x: number; y: number }
+type Room = { title: string, id: number }
+
+type Point = { x: number; y: number }
