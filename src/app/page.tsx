@@ -1,4 +1,5 @@
 'use client'
+
 import { FC, useState } from 'react';
 
 interface Room {
@@ -14,7 +15,20 @@ interface PageProps {
 
 const Page: FC<PageProps> = ({ initialRoomId }) => {
   const [roomId, setRoomId] = useState(initialRoomId);
-  const [rooms, setRooms] = useState(roomProp);
+  const [rooms, setRooms] = useState<Room[]>(roomProp);
+  const [newRoomTitle, setNewRoomTitle] = useState('');
+
+  const handleCreateRoom = () => {
+    const newRoom: Room = {
+      title: newRoomTitle,
+      currentPlayer: 0,
+      maxPlayer: 4,
+      id: Math.random().toString(36).substr(2, 9), 
+    };
+
+    setRooms((prevRooms) => [...prevRooms, newRoom]);
+    setNewRoomTitle(''); // Clear the input field
+  };
 
   const handleDelete = (id: string) => {
     setRooms((prevRooms) => prevRooms.filter((room) => room.id !== id));
@@ -23,6 +37,21 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   return (
     <div className='w-screen h-screen bg-white flex justify-center items-center'>
       <div className='flex flex-col gap-10 pr-10'>
+        <div className='flex gap-4'>
+          <input
+            type='text'
+            value={newRoomTitle}
+            onChange={(e) => setNewRoomTitle(e.target.value)}
+            placeholder='Enter room title'
+            className='p-2 border'
+          />
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={handleCreateRoom}
+          >
+            Create Room
+          </button>
+        </div>
         <table>
           <thead className=''>
             <tr>
