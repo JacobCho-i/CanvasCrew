@@ -17,17 +17,30 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   const [roomId, setRoomId] = useState(initialRoomId);
   const [rooms, setRooms] = useState<Room[]>(roomProp);
   const [newRoomTitle, setNewRoomTitle] = useState('');
+  const [roomPopUp, setRoomPopUp] = useState(false);
 
   const handleCreateRoom = () => {
+
+    if (!roomPopUp) {
+      setRoomPopUp(true);
+      return;
+    }
+
+    if (newRoomTitle.trim() === '') {
+      alert('Please enter a valid room title.');
+      return;
+    }
+
     const newRoom: Room = {
       title: newRoomTitle,
       currentPlayer: 0,
       maxPlayer: 4,
-      id: Math.random().toString(36).substr(2, 9), 
+      id: Math.random().toString(36).substr(2, 9),
     };
 
     setRooms((prevRooms) => [...prevRooms, newRoom]);
-    setNewRoomTitle(''); // Clear the input field
+    setNewRoomTitle(''); 
+    setRoomPopUp(false);
   };
 
   const handleDelete = (id: string) => {
@@ -37,13 +50,15 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   return (
     <div className='w-screen h-screen bg-white flex justify-center items-center'>
       <div className='flex flex-col gap-10 pr-10'>
-        <div className='flex gap-4'>
+        {roomPopUp ? 
+        <>
+          <div className='flex gap-4'>
           <input
             type='text'
             value={newRoomTitle}
             onChange={(e) => setNewRoomTitle(e.target.value)}
             placeholder='Enter room title'
-            className='p-2 border'
+            className='p-2 border bg-white'
           />
           <button
             className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
@@ -52,6 +67,18 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
             Create Room
           </button>
         </div>
+        </> : 
+        <>
+          <div className='flex gap-4'>
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={handleCreateRoom}
+          >
+            Create Room
+          </button>
+        </div>
+        </>} 
+        
         <table>
           <thead className=''>
             <tr>
