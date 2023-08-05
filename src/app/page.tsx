@@ -63,7 +63,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
 
   return (
     <div className='w-screen h-screen bg-white flex justify-center items-center'>
-      <div className='flex flex-col gap-10 pr-10'>
+      <div className='flex flex-col gap-10 pr-10' style={{ maxHeight: 'calc(100vh - 50px)', overflowY: 'auto' }}>
       {roomPopUp ? (
           <>
             <div className='flex gap-4'>
