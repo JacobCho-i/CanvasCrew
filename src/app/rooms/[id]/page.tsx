@@ -21,7 +21,6 @@ const page: FC<PageProps> = ({}) => {
       setErase(false)
       return
     }
-    //setColor('#FFFFFF')
     setFill(false)
     setSpoil(false)
     setErase(true)
@@ -32,7 +31,6 @@ const page: FC<PageProps> = ({}) => {
       setFill(false)
       return
     }
-    //setColor('#FFFFFF')
     setFill(true)
     setSpoil(false)
     setErase(false)
@@ -47,6 +45,31 @@ const page: FC<PageProps> = ({}) => {
     setSpoil(true)
     setErase(false)
   }
+
+  const spoiler = (x: number, y: number) => {
+    if (!canvasRef.current) {
+      return;
+    } 
+  
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) {
+      return;
+    } 
+  
+    const pixelColor = ctx.getImageData(x, y, 1, 1).data;
+    const hexColor = rgbToHex(pixelColor[0], pixelColor[1], pixelColor[2]);
+    setColor(hexColor);
+  };
+
+  const onMouseDownSpoiler = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return; 
+  
+    const boundingRect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - boundingRect.left;
+    const y = e.clientY - boundingRect.top;
+  
+    spoiler(x, y);
+  };
 
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
     const {x: currX, y: currY } = currentPoint
@@ -80,20 +103,20 @@ const page: FC<PageProps> = ({}) => {
         : <button type='button' className='p-2 rounded-md border border-black' onClick={erase}>eraser</button>
         }
         {spoilActivated ? 
-        <button type='button' className='p-2 rounded-md border border-black bg-gray-400' onClick={spoil}>spoiler</button>
-        : <button type='button' className='p-2 rounded-md border border-black' onClick={spoil}>spoiler</button>
+        <button type='button' className='p-2 rounded-md border border-black bg-gray-400' onClick={spoil}>pipette</button>
+        : <button type='button' className='p-2 rounded-md border border-black' onClick={spoil}>pipette</button>
         }
-        
-        
-        
       </div>
-      
       <button type='button' className='p-2 rounded-md border border-black' onClick={clear}>Clear Canvas</button>
     </div>
-    <canvas onMouseDown={onMouseDown} ref={canvasRef} width={750} height={500} className='border border-black rounded-md'/>
+    <canvas onMouseDown={spoilActivated ? onMouseDownSpoiler : onMouseDown} ref={canvasRef} width={750} height={500} className='border border-black rounded-md'/>
   </div>
   );
   
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
 export default page
