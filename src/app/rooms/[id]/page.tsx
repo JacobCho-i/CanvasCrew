@@ -10,38 +10,26 @@ interface PageProps {}
 
 const page: FC<PageProps> = ({}) => {
   const [color, setColor] = useState<string>('#000')
-  const [fillActivated, setFill] = useState(false)
   const [eraseActivated, setErase] = useState(false)
   const [spoilActivated, setSpoil] = useState(false)
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
-  let tempColor = "";
 
   const erase = () => {
     if (eraseActivated) {
       setErase(false)
       return
     }
-    setFill(false)
     setSpoil(false)
     setErase(true)
   }
 
-  const fill = () => {
-    if (fillActivated) {
-      setFill(false)
-      return
-    }
-    setFill(true)
-    setSpoil(false)
-    setErase(false)
-  }
+
 
   const spoil = () => {
     if (spoilActivated) {
       setSpoil(false)
       return
     }
-    setFill(false)
     setSpoil(true)
     setErase(false)
   }
@@ -70,7 +58,7 @@ const page: FC<PageProps> = ({}) => {
   
     spoiler(x, y);
   };
-
+  
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
     const {x: currX, y: currY } = currentPoint
     const lineWidth = 5
@@ -94,10 +82,6 @@ const page: FC<PageProps> = ({}) => {
     <div className='flex flex-col gap-5 pr-10'>
       <ChromePicker color={color} onChange={(e) => setColor(e.hex)}/>
       <div className=' flex justify-center space-x-4'>
-        {fillActivated ? 
-        <button type='button' className='p-2 rounded-md border border-black bg-gray-400' onClick={fill}>fill</button>
-        : <button type='button' className='p-2 rounded-md border border-black' onClick={fill}>fill</button>
-        }
         {eraseActivated ? 
         <button type='button' className='p-2 rounded-md border border-black bg-gray-400' onClick={erase}>eraser</button>
         : <button type='button' className='p-2 rounded-md border border-black' onClick={erase}>eraser</button>
@@ -107,9 +91,19 @@ const page: FC<PageProps> = ({}) => {
         : <button type='button' className='p-2 rounded-md border border-black' onClick={spoil}>pipette</button>
         }
       </div>
+      <div className=' flex justify-center space-x-4'>
+        <input className='p-2 border bg-white'/> 
+        <button type='button' className='p-2 rounded-md border border-black'>set stroke</button>
+      </div>
       <button type='button' className='p-2 rounded-md border border-black' onClick={clear}>Clear Canvas</button>
     </div>
-    <canvas onMouseDown={spoilActivated ? onMouseDownSpoiler : onMouseDown} ref={canvasRef} width={750} height={500} className='border border-black rounded-md'/>
+    <canvas
+      onMouseDown={spoilActivated ? onMouseDownSpoiler : onMouseDown}
+      ref={canvasRef}
+      width={750}
+      height={500}
+      className="border border-black rounded-md"
+    />
   </div>
   );
   
