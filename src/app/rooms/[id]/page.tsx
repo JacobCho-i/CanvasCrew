@@ -12,6 +12,7 @@ const page: FC<PageProps> = ({}) => {
   const [color, setColor] = useState<string>('#000')
   const [eraseActivated, setErase] = useState(false)
   const [spoilActivated, setSpoil] = useState(false)
+  const [strokeWidth, setStrokeWidth] = useState<number>(5);
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
 
   const erase = () => {
@@ -58,23 +59,28 @@ const page: FC<PageProps> = ({}) => {
   
     spoiler(x, y);
   };
+
+  const handleStrokeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStrokeWidth(parseInt(e.target.value, 10));
+  };
   
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
-    const {x: currX, y: currY } = currentPoint
-    const lineWidth = 5
-
-    let startPoint = prevPoint ?? currentPoint
-    ctx.beginPath()
-    ctx.lineWidth = lineWidth
-    ctx.strokeStyle = eraseActivated ? '#FFFFFF' : color
-    ctx.moveTo(startPoint.x, startPoint.y)
-    ctx.lineTo(currX, currY)
-    ctx.stroke()
-
-    ctx.fillStyle = eraseActivated ? '#FFFFFF' : color
-    ctx.beginPath()
-    ctx.arc(startPoint.x, startPoint.y, 2, 0, 2 * Math.PI)
-    ctx.fill()
+    const {x: currX, y: currY } = currentPoint;
+    const radius = strokeWidth / 2;
+  
+    if (prevPoint) {
+      ctx.beginPath();
+      ctx.lineWidth = strokeWidth;
+      ctx.strokeStyle = eraseActivated ? '#FFFFFF' : color;
+      ctx.moveTo(prevPoint.x, prevPoint.y);
+      ctx.lineTo(currX, currY);
+      ctx.stroke();
+    }
+  
+    ctx.beginPath();
+    ctx.fillStyle = eraseActivated ? '#FFFFFF' : color;
+    ctx.arc(currX, currY, radius, 0, 2 * Math.PI);
+    ctx.fill();
   }
 
   return (
@@ -91,10 +97,8 @@ const page: FC<PageProps> = ({}) => {
         : <button type='button' className='p-2 rounded-md border border-black' onClick={spoil}>pipette</button>
         }
       </div>
-      <div className=' flex justify-center space-x-4'>
-        <input className='p-2 border bg-white'/> 
-        <button type='button' className='p-2 rounded-md border border-black'>set stroke</button>
-      </div>
+      <input type='text' className='p-2 border bg-white' placeholder='brush stroke..' onChange={handleStrokeChange} value={strokeWidth} /> 
+      <button type='button' className='p-2 rounded-md border border-black'>set stroke</button>
       <button type='button' className='p-2 rounded-md border border-black' onClick={clear}>Clear Canvas</button>
     </div>
     <canvas
