@@ -7,6 +7,7 @@ interface Room {
   currentPlayer: number;
   maxPlayer: number;
   id: string;
+  password: string;
 }
 
 interface PageProps {
@@ -18,6 +19,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   const [rooms, setRooms] = useState<Room[]>(roomProp);
   const [newRoomTitle, setNewRoomTitle] = useState('');
   const [roomMaxPlayer, setRoomMaxPlayer] = useState('');
+  const [password, setPassword] = useState('');
   const [roomPopUp, setRoomPopUp] = useState(false);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
 
@@ -91,6 +93,15 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
                 />
                 Password?
               </label>
+              {isPasswordProtected ? <input
+                type='text'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder='password'
+                className='p-1 border bg-white'
+                style={{ width: '70px', height: '30px' }}
+              /> :
+              <></>}
               <button
                 className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
                 onClick={handleCreateRoom}
@@ -144,10 +155,10 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
 };
 
 const roomProp: Room[] = [
-  { title: "Hi there", currentPlayer: 2, maxPlayer: 4, id: '1111' },
-  { title: "Hello", currentPlayer: 1, maxPlayer: 4, id: '2222' },
-  { title: "I am hungry", currentPlayer: 1, maxPlayer: 2, id: '3333' },
-  { title: "any drawers?", currentPlayer: 3, maxPlayer: 4, id: '4444' }
+  { title: "Hi there", currentPlayer: 2, maxPlayer: 4, id: '1111', password: ''},
+  { title: "Hello", currentPlayer: 1, maxPlayer: 4, id: '2222', password: '22'},
+  { title: "I am hungry", currentPlayer: 1, maxPlayer: 2, id: '3333', password: ''},
+  { title: "any drawers?", currentPlayer: 3, maxPlayer: 4, id: '4444', password: ''}
 ];
 
 export async function getServerSideProps() {
