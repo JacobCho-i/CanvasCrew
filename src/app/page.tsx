@@ -51,6 +51,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
       currentPlayer: 0,
       maxPlayer: Number(roomMaxPlayer),
       id: Math.random().toString(36).substr(2, 9),
+      password: password
     };
 
     setRooms((prevRooms) => [...prevRooms, newRoom]);
@@ -62,6 +63,18 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   const handleDelete = (id: string) => {
     setRooms((prevRooms) => prevRooms.filter((room) => room.id !== id));
   };
+
+  const handleJoinRoom = (room: Room) => {
+    if (room.password !== '') {
+      const enteredPassword = prompt('Please enter the room password:');
+      if (enteredPassword !== room.password) {
+        alert('Incorrect password, please try again.');
+        return;
+      }
+    }
+    window.location.href = `/rooms/${room.id}`;
+  };
+  
 
   return (
     <div className='w-screen h-screen bg-white flex justify-center items-center'>
@@ -137,9 +150,12 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
                     {room.currentPlayer}/{room.maxPlayer}
                   </td>
                   <td className='w-1/2 p-2'>
-                    <a href={`/rooms/${room.id}`}>
-                      <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Join</button>
-                    </a>
+                    <button
+                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                      onClick={() => handleJoinRoom(room)}
+                    >
+                      Join
+                    </button>
                   </td>
                   <td className='w-4 p-4'>
                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={() => handleDelete(room.id)}>X</button>

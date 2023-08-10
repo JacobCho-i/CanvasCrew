@@ -13,6 +13,7 @@ const page: FC<PageProps> = ({}) => {
   const [eraseActivated, setErase] = useState(false)
   const [spoilActivated, setSpoil] = useState(false)
   const [strokeWidth, setStrokeWidth] = useState<number>(5);
+  const [isRoomCreater, setRoomCreater] = useState(true);
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
 
   const erase = () => {
@@ -64,6 +65,7 @@ const page: FC<PageProps> = ({}) => {
     setStrokeWidth(parseInt(e.target.value, 10));
   };
   
+
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
     const {x: currX, y: currY } = currentPoint;
     const radius = strokeWidth / 2;
@@ -101,17 +103,41 @@ const page: FC<PageProps> = ({}) => {
       <button type='button' className='p-2 rounded-md border border-black'>set stroke</button>
       <button type='button' className='p-2 rounded-md border border-black' onClick={clear}>Clear Canvas</button>
     </div>
-    <canvas
-      onMouseDown={spoilActivated ? onMouseDownSpoiler : onMouseDown}
-      ref={canvasRef}
-      width={750}
-      height={500}
-      className="border border-black rounded-md"
-    />
+    <div className='flex items-start'>
+      <canvas
+        onMouseDown={spoilActivated ? onMouseDownSpoiler : onMouseDown}
+        ref={canvasRef}
+        width={500}
+        height={500}
+        className="border border-black rounded-md"
+      />
+      <table className="border border-black ml-4">
+        <thead>
+          <tr>
+            <th className="border border-black px-4 py-2">Current Players</th>
+          </tr>
+        </thead>
+        <tbody>
+          {players.map((player, index) => (
+            <tr key={index}>
+              <td className="border border-black px-4 py-2 space-x-4">
+                {player}
+                {isRoomCreater ? <button type='button'>X</button> : <></>}
+                
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </div>
   );
   
 }
+
+const players: string[] = [
+  "hello", "world", "nice"
+]
 
 function rgbToHex(r: number, g: number, b: number) {
   return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
