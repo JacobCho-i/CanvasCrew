@@ -67,7 +67,10 @@ const page: FC<PageProps> = ({}) => {
   };
   
   const handleDelete = (username: string) => {
-    setUsers((prevUsers) => prevUsers.filter((users) => users !== username));
+    const isConfirmed = window.confirm(`Are you sure you want to kick ${username}?`);
+    if (isConfirmed) {
+      setUsers((prevUsers) => prevUsers.filter((user) => user !== username));
+    }
   };
 
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
@@ -116,23 +119,24 @@ const page: FC<PageProps> = ({}) => {
         className="border border-black rounded-md"
       />
       <table className="border border-black ml-4">
-        <thead>
-          <tr>
-            <th className="border border-black px-4 py-2">Current Players</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Use the users state instead of players constant */}
-          {users.map((user, index) => (
-            <tr key={index}>
-              <td className="border border-black px-4 py-2 space-x-4">
+      <thead>
+        <tr>
+          <th className="border border-black px-4 py-2">Current Players</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user, index) => (
+          <tr key={index}>
+            <td className="border border-black px-4 py-2 space-x-4">
+              <div className="flex justify-between items-center"> {}
                 {user}
-                {isRoomCreater ? <button type='button' onClick={() => handleDelete(user)}>X</button> : <></>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                {isRoomCreater ? <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded' type='button' onClick={() => handleDelete(user)}>X</button> : <></>}
+              </div> {}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
     </div>
   </div>
   );
