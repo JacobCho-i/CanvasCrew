@@ -14,6 +14,7 @@ const page: FC<PageProps> = ({}) => {
   const [spoilActivated, setSpoil] = useState(false)
   const [strokeWidth, setStrokeWidth] = useState<number>(5);
   const [isRoomCreater, setRoomCreater] = useState(true);
+  const [users, setUsers] = useState<string[]>(players);
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
 
   const erase = () => {
@@ -65,6 +66,9 @@ const page: FC<PageProps> = ({}) => {
     setStrokeWidth(parseInt(e.target.value, 10));
   };
   
+  const handleDelete = (username: string) => {
+    setUsers((prevUsers) => prevUsers.filter((users) => users !== username));
+  };
 
   function drawLine({prevPoint, currentPoint, ctx}: Draw) {
     const {x: currX, y: currY } = currentPoint;
@@ -118,12 +122,12 @@ const page: FC<PageProps> = ({}) => {
           </tr>
         </thead>
         <tbody>
-          {players.map((player, index) => (
+          {/* Use the users state instead of players constant */}
+          {users.map((user, index) => (
             <tr key={index}>
               <td className="border border-black px-4 py-2 space-x-4">
-                {player}
-                {isRoomCreater ? <button type='button'>X</button> : <></>}
-                
+                {user}
+                {isRoomCreater ? <button type='button' onClick={() => handleDelete(user)}>X</button> : <></>}
               </td>
             </tr>
           ))}
