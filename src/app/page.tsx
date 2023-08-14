@@ -150,12 +150,21 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
                     {room.currentPlayer}/{room.maxPlayer}
                   </td>
                   <td className='w-1/2 p-2'>
+                    {room.password !== '' ? 
                     <button
                       className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
                       onClick={() => handleJoinRoom(room)}
                     >
-                      Join
-                    </button>
+                      🔒 Join
+                    </button> 
+                    : 
+                    <button
+                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                      onClick={() => handleJoinRoom(room)}
+                    >
+                       Join
+                    </button>}
+                    
                   </td>
                   <td className='w-4 p-4'>
                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={() => handleDelete(room.id)}>X</button>
