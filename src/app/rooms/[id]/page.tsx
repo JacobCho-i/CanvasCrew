@@ -13,6 +13,7 @@ const page: FC<PageProps> = ({}) => {
   const [eraseActivated, setErase] = useState(false)
   const [spoilActivated, setSpoil] = useState(false)
   const [strokeWidth, setStrokeWidth] = useState<number>(5);
+  const [tempStrokeWidth, setTempStrokeWidth] = useState<number | string>(5);
   const [isRoomCreater, setRoomCreater] = useState(true);
   const [users, setUsers] = useState<string[]>(players);
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
@@ -63,8 +64,29 @@ const page: FC<PageProps> = ({}) => {
   };
 
   const handleStrokeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStrokeWidth(parseInt(e.target.value, 10));
+    const inputValue = e.target.value.trim();
+
+    if (!inputValue) {
+        setTempStrokeWidth('');
+        return;
+    }
+
+    if (Number.isNaN(inputValue)) {
+        setTempStrokeWidth(0);
+        return;
+    }
+
+    setTempStrokeWidth(parseInt(inputValue, 10));
+};
+
+  const handleSetStroke = () => {
+    if (tempStrokeWidth === '' || typeof tempStrokeWidth !== 'number') {
+      alert('Please enter a valid integer')
+      return;
+    }
+    setStrokeWidth(tempStrokeWidth);
   };
+  
   
   const handleDelete = (username: string) => {
     const isConfirmed = window.confirm(`Are you sure you want to kick ${username}?`);
@@ -106,8 +128,8 @@ const page: FC<PageProps> = ({}) => {
         : <button type='button' className='p-2 rounded-md border border-black' onClick={spoil}>pipette</button>
         }
       </div>
-      <input type='text' className='p-2 border bg-white' placeholder='brush stroke..' onChange={handleStrokeChange} value={strokeWidth} /> 
-      <button type='button' className='p-2 rounded-md border border-black'>set stroke</button>
+      <input type='text' className='p-2 border bg-white' placeholder='brush stroke..' onChange={handleStrokeChange} value={tempStrokeWidth} /> 
+      <button type='button' className='p-2 rounded-md border border-black' onClick={handleSetStroke}>Set Stroke</button>
       <button type='button' className='p-2 rounded-md border border-black' onClick={clear}>Clear Canvas</button>
     </div>
     <div className='flex items-start'>
