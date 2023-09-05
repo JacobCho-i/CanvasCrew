@@ -4,15 +4,10 @@ import { query } from '../../database/db';
 export async function GET(request: Request) {
     try {
         await query(`
-          CREATE TABLE IF NOT EXISTS room_data (
-            id VARCHAR(4) PRIMARY KEY,
-            title VARCHAR(100),
-            currentPlayer INT,
-            maxPlayer INT,
-            password VARCHAR(100)
-          );
+        INSERT INTO room_data (id, title, currentPlayer, maxPlayer, password)
+        VALUES ('1111', 'hello', 2, 4, '');
         `);
-        return NextResponse.json({ message: 'Table created successfully!' });
+        return NextResponse.json({ message: 'Table exists!' });
       } catch (error) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message });

@@ -3,16 +3,10 @@ import { query } from '../../database/db';
 
 export async function GET(request: Request) {
     try {
-        await query(`
-          CREATE TABLE IF NOT EXISTS room_data (
-            id VARCHAR(4) PRIMARY KEY,
-            title VARCHAR(100),
-            currentPlayer INT,
-            maxPlayer INT,
-            password VARCHAR(100)
-          );
+        const result = await query(`
+            SELECT * FROM room_data;
         `);
-        return NextResponse.json({ message: 'Table created successfully!' });
+        return NextResponse.json({ data: result.rows });
       } catch (error) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message });
@@ -21,4 +15,3 @@ export async function GET(request: Request) {
         }
       }
 }
-

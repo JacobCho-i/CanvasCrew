@@ -23,7 +23,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
   const [roomPopUp, setRoomPopUp] = useState(false);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
 
     if (!roomPopUp) {
       setRoomPopUp(true);
@@ -55,6 +55,17 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
     };
 
     setRooms((prevRooms) => [...prevRooms, newRoom]);
+    const { title, currentPlayer, maxPlayer, id } = newRoom;
+    const pw = newRoom.password;
+    const res = await fetch('http://localhost:3000/api/sendDB', {
+      method: 'PUT',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        title, currentPlayer, maxPlayer, id, pw
+      })
+    })
     setNewRoomTitle('');
     setRoomMaxPlayer('') 
     setRoomPopUp(false);
