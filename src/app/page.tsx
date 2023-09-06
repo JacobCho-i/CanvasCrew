@@ -66,6 +66,8 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
         title, currentPlayer, maxPlayer, id, pw
       })
     })
+    const responseText = await res.text();
+    console.log("Response from /api/sendDB:", responseText);
     setNewRoomTitle('');
     setRoomMaxPlayer('') 
     setRoomPopUp(false);
