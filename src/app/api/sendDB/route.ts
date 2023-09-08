@@ -3,8 +3,8 @@ import { query } from '../../database/db';
 
 type Room = {
     title?: string, 
-    currentPlayer?: string, 
-    maxPlayer?: string, 
+    currentplayer?: string, 
+    maxplayer?: string, 
     id?: string,
     pw?: string,
 }
@@ -13,9 +13,9 @@ export async function PUT(request: Request) {
     const data: Room = await request.json()
     try {
         console.log('data: ', data)
-        const { title, currentPlayer, maxPlayer, id, pw } = data
-        const cp = Number(currentPlayer);
-        const mp = Number(maxPlayer);
+        const { title, currentplayer, maxplayer, id, pw } = data
+        const cp = Number(currentplayer);
+        const mp = Number(maxplayer);
         const sql = `
             INSERT INTO room_data (id, title, currentPlayer, maxPlayer, password)
             VALUES ($1, $2, $3, $4, $5);

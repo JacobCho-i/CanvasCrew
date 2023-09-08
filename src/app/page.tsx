@@ -1,11 +1,11 @@
 'use client'
 
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 interface Room {
   title: string;
-  currentPlayer: number;
-  maxPlayer: number;
+  currentplayer: number;
+  maxplayer: number;
   id: string;
   password: string;
 }
@@ -16,12 +16,16 @@ interface PageProps {
 
 const Page: FC<PageProps> = ({ initialRoomId }) => {
   const [roomId, setRoomId] = useState(initialRoomId);
-  const [rooms, setRooms] = useState<Room[]>(roomProp);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [newRoomTitle, setNewRoomTitle] = useState('');
   const [roomMaxPlayer, setRoomMaxPlayer] = useState('');
   const [password, setPassword] = useState('');
   const [roomPopUp, setRoomPopUp] = useState(false);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  
+    useEffect(() => {
+      loadDB();
+    }, []);
 
   const handleCreateRoom = async () => {
 
@@ -48,14 +52,14 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
 
     const newRoom: Room = {
       title: newRoomTitle,
-      currentPlayer: 0,
-      maxPlayer: Number(roomMaxPlayer),
+      currentplayer: 0,
+      maxplayer: Number(roomMaxPlayer),
       id: Math.random().toString(36).substr(2, 9),
       password: password
     };
 
     setRooms((prevRooms) => [...prevRooms, newRoom]);
-    const { title, currentPlayer, maxPlayer, id } = newRoom;
+    const { title, currentplayer, maxplayer, id } = newRoom;
     const pw = newRoom.password;
     const res = await fetch('http://localhost:3000/api/sendDB', {
       method: 'PUT',
@@ -63,7 +67,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
         'Content-Type' : 'application/json'
       },
       body: JSON.stringify({
-        title, currentPlayer, maxPlayer, id, pw
+        title, currentplayer, maxplayer, id, pw
       })
     })
     const responseText = await res.text();
@@ -87,6 +91,30 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
     }
     window.location.href = `/rooms/${room.id}`;
   };
+
+  async function loadDB() {
+    try {
+        const res = await fetch('http://localhost:3000/api/loadDB', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!res.ok) {
+            throw new Error("Network response was not ok");
+        }
+        const jsonResponse = await res.json();
+        console.log(jsonResponse);
+        const roomData: Room[] = jsonResponse.data;
+        if (Array.isArray(roomData)) {
+            setRooms(roomData);
+        } else {
+            console.error("Received data is not an array:", roomData);
+        }
+    } catch (error) {
+        console.error("Error loading rooms from DB:", error);
+    }
+}
   
 
   return (
@@ -160,7 +188,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
                 <tr key={room.id} className='rounded-lg overflow-hidden shadow-md'>
                   <td className='w-1/4 p-4'>{room.title}</td>
                   <td className='w-1/4 p-4'>
-                    {room.currentPlayer}/{room.maxPlayer}
+                    {room.currentplayer}/{room.maxplayer}
                   </td>
                   <td className='w-1/2 p-2'>
                     {room.password !== '' ? 
@@ -191,13 +219,6 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
     </div>
   );
 };
-
-const roomProp: Room[] = [
-  { title: "Hi there", currentPlayer: 2, maxPlayer: 4, id: '1111', password: ''},
-  { title: "Hello", currentPlayer: 1, maxPlayer: 4, id: '2222', password: '22'},
-  { title: "I am hungry", currentPlayer: 1, maxPlayer: 2, id: '3333', password: ''},
-  { title: "any drawers?", currentPlayer: 3, maxPlayer: 4, id: '4444', password: ''}
-];
 
 export async function getServerSideProps() {
   const roomId = Math.floor(Math.random() * 9000) + 1000;
