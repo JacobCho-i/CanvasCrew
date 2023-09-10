@@ -89,6 +89,26 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
         return;
       }
     }
+    const req = await fetch('http://localhost:3000/api/loadDB', {
+      method: 'GET',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+    })
+    if (!req.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const jsonResponse = await req.json();
+    console.log(jsonResponse);
+    const roomData: Room[] = jsonResponse.data;
+    for (let room_data of roomData) {
+      if (room_data.id == room.id) {
+        if (room_data.currentplayer == room_data.maxplayer) {
+          alert('This room is full!');
+          return;
+        }
+      }
+    }
     const currentplayer = room.currentplayer;
     const id = room.id;
     const res = await fetch('http://localhost:3000/api/joinRoom', {
