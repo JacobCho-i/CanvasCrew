@@ -81,7 +81,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
     setRooms((prevRooms) => prevRooms.filter((room) => room.id !== id));
   };
 
-  const handleJoinRoom = (room: Room) => {
+  const handleJoinRoom = async (room: Room) => {
     if (room.password !== '') {
       const enteredPassword = prompt('Please enter the room password:');
       if (enteredPassword !== room.password) {
@@ -89,6 +89,17 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
         return;
       }
     }
+    const currentplayer = room.currentplayer;
+    const id = room.id;
+    const res = await fetch('http://localhost:3000/api/joinRoom', {
+      method: 'PUT',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        currentplayer, id
+      })
+    })
     window.location.href = `/rooms/${room.id}`;
   };
 

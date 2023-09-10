@@ -77,7 +77,7 @@ const page: FC<PageProps> = ({}) => {
     }
 
     setTempStrokeWidth(parseInt(inputValue, 10));
-};
+  };
 
   const handleSetStroke = () => {
     if (tempStrokeWidth === '' || typeof tempStrokeWidth !== 'number') {
