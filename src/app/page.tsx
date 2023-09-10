@@ -207,7 +207,7 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
         )}
         <div style={{ width: '600px' }}>
           <table>
-            <thead className=''>
+            <thead>
               <tr>
                 <th className='w-1/3 p-4'>Title</th>
                 <th className='w-1/6 p-4'>Players</th>
@@ -217,11 +217,11 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
             <tbody>
               {rooms.map((room) => (
                 <tr key={room.id} className='rounded-lg overflow-hidden shadow-md'>
-                  <td className='w-1/4 p-4'>{room.title}</td>
-                  <td className='w-1/4 p-4'>
+                  <td className='w-1/3 p-4'>{room.title}</td>
+                  <td className='w-1/6 p-4 mr-16'>
                     {room.currentplayer}/{room.maxplayer}
                   </td>
-                  <td className='w-1/2 p-2'>
+                  <td className='w-1/2 p-2 ml-16 flex justify-between'>
                     {room.password !== '' ? 
                     <button
                       className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
@@ -236,9 +236,6 @@ const Page: FC<PageProps> = ({ initialRoomId }) => {
                     >
                        Join
                     </button>}
-                    
-                  </td>
-                  <td className='w-4 p-4'>
                     <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={() => handleDelete(room.id)}>X</button>
                   </td>
                 </tr>
